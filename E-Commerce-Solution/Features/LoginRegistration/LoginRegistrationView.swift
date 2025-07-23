@@ -29,11 +29,9 @@ struct LoginRegistrationView: View {
             VStack(spacing: 32) {
                 // Header Section
                 LoginHeaderView()
-                    .rainbowDebug()
 
                 // Toggle Section
                 LoginToggleView(selectedMode: $viewModel.selectedMode)
-                    .rainbowDebug()
 
                 VStack(spacing: 20) {
                     // Email Field
@@ -54,7 +52,6 @@ struct LoginRegistrationView: View {
                         .font(.system(size: 14))
                         .foregroundColor(.blue)
                     }
-                    .rainbowDebug()
 
                     if self.viewModel.selectedMode == .new {
                         PrimaryButton(
@@ -126,14 +123,11 @@ struct LoginRegistrationView: View {
                     onGoogleLogin: viewModel.signInWithGoogle,
                     onAppleLogin: viewModel.signInWithApple
                 )
-                .rainbowDebug()
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 32)
-            .rainbowDebug()
         }
         .background(Color(.systemBackground))
-        .rainbowDebug()
     }
 }
 

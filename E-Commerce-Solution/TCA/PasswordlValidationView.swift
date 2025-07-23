@@ -28,12 +28,10 @@ struct PasswordValidationView: View {
                     ),
                     hasError: viewStore.errorMessage != nil
                 )
-                .rainbowDebug()
 
                 // Error Message
                 if let validationError = viewStore.errorMessage {
                     ErrorMessageView(message: validationError)
-                        .rainbowDebug()
                 }
             }
         }

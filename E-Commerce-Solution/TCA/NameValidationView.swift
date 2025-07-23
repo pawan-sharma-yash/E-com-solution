@@ -30,11 +30,9 @@ struct NameValidationView: View {
                     Image(systemName: "pencil.circle")
                         .foregroundColor(.gray)
                 }
-                .rainbowDebug()
 
                 if let validationError = viewStore.errorMessage {
                     ErrorMessageView(message: validationError)
-                        .rainbowDebug()
                 }
             }
         }

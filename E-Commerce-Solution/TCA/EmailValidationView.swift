@@ -29,11 +29,9 @@ struct EmailValidationView: View {
                     Image(systemName: "envelope")
                         .foregroundColor(.gray)
                 }
-                .rainbowDebug()
 
                 if let validationError = viewStore.errorMessage {
                     ErrorMessageView(message: validationError)
-                        .rainbowDebug()
                 }
             }
         }

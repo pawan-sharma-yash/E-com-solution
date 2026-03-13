@@ -26,12 +26,17 @@ struct LoginRegistrationView: View {
     initialState: NameValidationFeature.State()
   ) { NameValidationFeature() }
 
-  private let store: StoreOf<FirebaseAuthFeature> = Store(
+  private let firebaseAuthStore: StoreOf<FirebaseAuthFeature> = Store(
     initialState: FirebaseAuthFeature.State()
   ) { FirebaseAuthFeature() }
 
+  @StateObject
+  private var loginRegistrationStore: StoreOf<LoginRegistrationFeature> = Store(
+    initialState: LoginRegistrationFeature.State()
+  ) { LoginRegistrationFeature() }
+
   var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
+    WithViewStore(firebaseAuthStore, observe: { $0 }) { viewStore in
       ScrollView {
         VStack(spacing: 32) {
           // Header Section
@@ -50,22 +55,22 @@ struct LoginRegistrationView: View {
             EmailValidationView(store: emailStore)
             PasswordValidationView(store: passwordStore)
 
-            if store.selectedMode == .new { NameValidationView(store: nameStore) }
+            if firebaseAuthStore.selectedMode == .new { NameValidationView(store: nameStore) }
 
             // Forgot Password Link
             HStack {
               Spacer()
               Button("Forgot Password?") {
-                viewStore.send(.showForgotPassword)
+                loginRegistrationStore.send(.forgotPasswordButtonTapped)
               }
               .font(.caption)
               .foregroundColor(.blue)
             }
 
-            if store.selectedMode == .new {
+            if firebaseAuthStore.selectedMode == .new {
               PrimaryButton(
                 title: "Sign Up",
-                isLoading: store.isLoading,
+                isLoading: firebaseAuthStore.isLoading,
                 action: {
                   guard
                     let email = try? emailStore.validatedEmailResult?.get(),
@@ -81,17 +86,17 @@ struct LoginRegistrationView: View {
               )) {
                 Alert(
                   title: Text("Attention"),
-                  message: Text(store.errorMessage ?? "Unknown error!"),
+                  message: Text(firebaseAuthStore.errorMessage ?? "Unknown error!"),
                   dismissButton: .default(Text("Ok"))
                 )
               }
             }
 
-            if store.selectedMode == .existing {
+            if firebaseAuthStore.selectedMode == .existing {
               // Sign In Button
               PrimaryButton(
                 title: "Sign In",
-                isLoading: store.isLoading,
+                isLoading: firebaseAuthStore.isLoading,
                 action: {
                   guard
                     let email = try? emailStore.validatedEmailResult?.get(),
@@ -107,7 +112,7 @@ struct LoginRegistrationView: View {
               )) {
                 Alert(
                   title: Text("Attention"),
-                  message: Text(store.errorMessage ?? "Unknown error!"),
+                  message: Text(firebaseAuthStore.errorMessage ?? "Unknown error!"),
                   dismissButton: .default(Text("Ok"))
                 )
               }
@@ -124,15 +129,15 @@ struct LoginRegistrationView: View {
       .onDisappear {
         viewStore.send(.stopListeningToAuthState)
       }
-      .sheet(isPresented: viewStore.binding(
-        get: \.showForgotPassword,
-        send: .hideForgotPassword
-      )) {
-        ForgotPasswordView(
-          onDismiss: {
-            viewStore.send(.hideForgotPassword)
-          }
+      .fullScreenCover(
+        store: loginRegistrationStore.scope(
+          state: \.$forgotPasswordPresentation,
+          action: \.showForgotPassword
         )
+      ) { childStore in
+        ForgotPasswordView(onDismiss: {
+          loginRegistrationStore.send(.dismissForgotPassword)
+        })
       }
     }
   }

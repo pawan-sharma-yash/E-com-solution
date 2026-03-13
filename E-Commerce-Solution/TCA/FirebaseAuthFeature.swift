@@ -20,7 +20,6 @@ struct FirebaseAuthFeature {
     fileprivate(set) var errorMessage: String?
     fileprivate(set) var showErrorAlert = false
     fileprivate(set) var selectedMode = UserAuthMode.existing
-    fileprivate(set) var showForgotPassword = false
 
     // Computed properties
     var isSignedIn: Bool { currentUser != nil }
@@ -36,8 +35,6 @@ struct FirebaseAuthFeature {
     case startListeningToAuthState
     case stopListeningToAuthState
     case switchAuthMode
-    case showForgotPassword
-    case hideForgotPassword
   }
 
   @Dependency(\.firebaseAuthClient) var firebaseAuthClient
@@ -101,14 +98,6 @@ struct FirebaseAuthFeature {
       case .dismissErrorAlert:
         state.showErrorAlert = false
         state.errorMessage = nil
-        return .none
-
-      case .showForgotPassword:
-        state.showForgotPassword = true
-        return .none
-
-      case .hideForgotPassword:
-        state.showForgotPassword = false
         return .none
 
       case .startListeningToAuthState:

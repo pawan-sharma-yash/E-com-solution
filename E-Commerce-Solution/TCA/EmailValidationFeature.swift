@@ -14,9 +14,9 @@ import ValidationKit
 struct EmailValidationFeature {
   @ObservableState
   struct State: Equatable {
-    public var emailText = ""
-    public var errorMessage: String?
-    public var validatedEmailResult: Result<EmailAddress, Validator.EmailValidationError>?
+    var emailText = ""
+    var errorMessage: String?
+    var validatedEmailResult: Result<EmailAddress, Validator.EmailValidationError>?
   }
 
   enum Action: BindableAction {

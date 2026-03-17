@@ -14,9 +14,9 @@ import ValidationKit
 struct NameValidationFeature {
   @ObservableState
   struct State: Equatable {
-    fileprivate(set) var nameText = ""
-    fileprivate(set) var errorMessage: String?
-    fileprivate(set) var validatedNameResult: Result<DataModels.Name, Validator.NameValidationError>?
+    var nameText = ""
+    var errorMessage: String?
+    var validatedNameResult: Result<DataModels.Name, Validator.NameValidationError>?
   }
 
   enum Action: BindableAction {

@@ -65,7 +65,7 @@ struct PasswordValidationFeatureTests {
 
     await store.receive(\.validatePassword) {
       $0.errorMessage = nil
-      $0.validatedPasswordResult = .success(try! Password("abc@xyz.com"))
+      $0.validatedPasswordResult = .success(try! Password("1Abc@xyz.com"))
     }
   }
 }

@@ -14,10 +14,10 @@ import ValidationKit
 struct PasswordValidationFeature : Sendable{
   @ObservableState
   struct State: Equatable {
-    public var passwordText = ""
-    public var isPasswordVisible = false
-    public var errorMessage: String?
-    public var validatedPasswordResult: Result<DataModels.Password, Validator.PasswordValidationError>?
+    var passwordText = ""
+    var isPasswordVisible = false
+    var errorMessage: String?
+    var validatedPasswordResult: Result<DataModels.Password, Validator.PasswordValidationError>?
   }
 
   enum Action: BindableAction {

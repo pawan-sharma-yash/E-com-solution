@@ -134,6 +134,19 @@ public enum Validator {
     /// Validates the password against a custom regular expression.
     /// - Parameter String: The regular expression pattern to match.
     case regex(String)
+
+      public var priority: Int {
+          switch self {
+          case .minLength:         1
+          case .digits:            2
+          case .maxLength:         3
+          case .uppercaseLetters:  4
+          case .lowercaseLetters:  5
+          case .specialCharacters: 6
+          case .noSpaces:          7
+          case .regex:             8
+          }
+      }
   }
 
   /// Represents the result of a password validation operation.

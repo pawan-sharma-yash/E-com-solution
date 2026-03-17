@@ -11,13 +11,13 @@ import Foundation
 import ValidationKit
 
 @Reducer
-struct PasswordValidationFeature {
+struct PasswordValidationFeature : Sendable{
   @ObservableState
   struct State: Equatable {
-    fileprivate(set) var passwordText = ""
-    fileprivate(set) var isPasswordVisible = false
-    fileprivate(set) var errorMessage: String?
-    fileprivate(set) var validatedPasswordResult: Result<DataModels.Password, Validator.PasswordValidationError>?
+    public var passwordText = ""
+    public var isPasswordVisible = false
+    public var errorMessage: String?
+    public var validatedPasswordResult: Result<DataModels.Password, Validator.PasswordValidationError>?
   }
 
   enum Action: BindableAction {

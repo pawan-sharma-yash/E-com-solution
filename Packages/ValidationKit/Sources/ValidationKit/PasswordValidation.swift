@@ -22,6 +22,7 @@ extension Validator.PasswordValidationRequirement: Equatable {
     case let (.lowercaseLetters(count1), .lowercaseLetters(count2)): count1 == count2
     case let (.digits(count1), .digits(count2)): count1 == count2
     case let (.specialCharacters(count1), .specialCharacters(count2)): count1 == count2
+    case let (.regex(r1), .regex(r2)): r1 == r2
     case (.noSpaces, .noSpaces): true
     default: false
     }
@@ -116,7 +117,7 @@ public extension Validator {
     return if failures.isEmpty {
       .success(())
     } else {
-      .failure(.invalidPassword(failures))
+        .failure(.invalidPassword(failures.sorted(by: { $0.priority < $1.priority })))
     }
   }
 }

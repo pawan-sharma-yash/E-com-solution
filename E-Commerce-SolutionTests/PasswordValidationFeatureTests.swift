@@ -31,6 +31,46 @@ struct PasswordValidationFeatureTests {
     await store.receive(\.validatePassword)
   }
 
+  @Test()
+  func `test state updates when password missing special character`() async {
+    let store = await TestStore(initialState: PasswordValidationFeature.State()) {
+      PasswordValidationFeature()
+    } withDependencies: { $0.continuousClock = clock }
+
+    await store.send(.passwordTextChanged("Abcx12324")) {
+      $0.passwordText = "Abcx12324"
+    }
+
+    await clock.advance(by: .milliseconds(delayThreshold))
+
+    await store.receive(\.validatePassword) {
+      $0.errorMessage = "[ValidationKit.Validator.PasswordValidationRequirement.specialCharacters(1)]"
+      $0.validatedPasswordResult = .failure(.invalidPassword([
+        .specialCharacters(1)
+      ]))
+    }
+  }
+
+  @Test()
+  func `test state updates when password is too short`() async {
+    let store = await TestStore(initialState: PasswordValidationFeature.State()) {
+      PasswordValidationFeature()
+    } withDependencies: { $0.continuousClock = clock }
+
+    await store.send(.passwordTextChanged("Abc@x12")) {
+      $0.passwordText = "Abc@x12"
+    }
+
+    await clock.advance(by: .milliseconds(delayThreshold))
+
+    await store.receive(\.validatePassword) {
+      $0.errorMessage = "[ValidationKit.Validator.PasswordValidationRequirement.minLength(8)]"
+      $0.validatedPasswordResult = .failure(.invalidPassword([
+        .minLength(8)
+      ]))
+    }
+  }
+
   @Test("Password text changed updates state with invalid password")
   func testPasswordTextChangedInvalid() async {
     let store = await TestStore(initialState: PasswordValidationFeature.State()) {

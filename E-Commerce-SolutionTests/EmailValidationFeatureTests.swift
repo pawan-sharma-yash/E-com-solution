@@ -34,14 +34,32 @@ struct EmailValidationFeatureTests {
     }
   }
 
-  @Test("Email text changed updates state with invalid email")
-  func testEmailTextChangedInvalid() async {
+  @Test("Email text missing domain name")
+  func testEmailTextMissingDomainName() async {
     let store = await TestStore(initialState: EmailValidationFeature.State()) {
       EmailValidationFeature()
     } withDependencies: { $0.continuousClock = clock }
 
     await store.send(.emailTextChanged("abc@xyz")) {
       $0.emailText = "abc@xyz"
+    }
+
+    await clock.advance(by: .milliseconds(delayThreshold))
+
+    await store.receive(\.validateEmail) {
+      $0.errorMessage = "Invalid email address".localize()
+      $0.validatedEmailResult = .failure(.invalidEmailAddress)
+    }
+  }
+
+  @Test("Email text missing @ sign")
+  func testEmailTextMissingAtSign() async {
+    let store = await TestStore(initialState: EmailValidationFeature.State()) {
+      EmailValidationFeature()
+    } withDependencies: { $0.continuousClock = clock }
+
+    await store.send(.emailTextChanged("abcxyz.com")) {
+      $0.emailText = "abcxyz.com"
     }
 
     await clock.advance(by: .milliseconds(delayThreshold))
